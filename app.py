@@ -10,7 +10,6 @@ app = Flask(__name__)
 
 THRESHOLD = 0.9
 
-
 @app.route('/', methods=['GET'])
 def verify():
     # when the endpoint is registered as a webhook, it must echo back
@@ -21,27 +20,6 @@ def verify():
         return request.args["hub.challenge"], 200
 
     return "Hello world, beachesss", 200
-
-
-value_property_button = {
-    "content_type": "text",
-    "title": "Value A Property",
-    "payload": "start_property_valuation"
-}
-joke_button = {
-    "content_type": "text",
-    "title": "Tell a joke",
-    "payload": "tell_joke"
-}
-location_button = {
-    "content_type": "location"
-}
-
-default_quick_replies_buttons = [
-    value_property_button,
-    joke_button,
-    location_button
-]
 
 
 @app.route('/', methods=['POST'])
@@ -88,9 +66,9 @@ def webhook():
                         if "greetings" in entities and entities["greetings"][0]["confidence"] >= THRESHOLD:
                             send_message(sender_id, "Hello.. What do you want to do?")
 
-                    # send_message(sender_id, "roger that!")
-                    # send_message(sender_id, "message text is: " + message_text)
 
+                    # send_message(sender_id, "message text is: " + message_text)
+                    send_message(sender_id, "roger that!")
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
 
@@ -101,7 +79,6 @@ def webhook():
                     pass
 
     return "ok", 200
-
 
 def check_property_price(entities):
     property_type = entities["property_type"][0]["value"] if "property_type" in entities else None
@@ -116,7 +93,6 @@ def check_property_price(entities):
     result = result + " at " + location + " cost $99999999"
 
     return result
-
 
 def send_message(recipient_id, message_text):
     log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
