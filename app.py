@@ -34,52 +34,53 @@ def webhook():
 
     data = request.get_json()
     log(data)  # you may not want to log every incoming message in production, but it's good for testing
+    try:
+        if data["object"] == "page":
 
-    if data["object"] == "page":
+            for entry in data["entry"]:
+                for messaging_event in entry["messaging"]:
 
-        for entry in data["entry"]:
-            for messaging_event in entry["messaging"]:
+                    # **********************************DONT REMOVE**********************************************************************************
+                    if messaging_event.get("message"):  # someone sent us a message
 
-                # **********************************DONT REMOVE**********************************************************************************
-                if messaging_event.get("message"):  # someone sent us a message
-
-                    sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
-                    recipient_id = messaging_event["recipient"][
-                        "id"]  # the recipient's ID, which should be your page's facebook ID
-                    message_text = messaging_event["message"]["attachments"]  # the message's text
+                        sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
+                        recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
+                        message_text = messaging_event["message"]["text"]  # the message's text
                     # **********************************DONT REMOVE**********************************************************************************
 
-                    response = wit_response(message_text)
+                        response = wit_response(message_text)
 
-                    entity = response[0]
-                    value = response[1]
+                        entity = response[0]
+                        value = response[1]
 
-                    if entity == 'insult':
-                        send_message(sender_id,
-                                     "Sorry, please do not hurl any vulgarities at me. I am too cute to be abused!")
-                    elif entity == 'greeting':
-                        send_message(sender_id, "Hi! Whatzzup! I am your friendly property noob!")
-                    elif entity == 'property':
-                        send_message(sender_id, "So you are looking for " + value)
-                        send_message(sender_id,
-                                     "Give me a moment. I will find out the prices of " + value + "in Singapore")
-                    elif entity == 'location':
-                        send_message(sender_id, "So you are looking for apartments in" + value)
-                        send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
-                    elif entity == None:
-                        send_message(sender_id, "I don't understand you.")
+                        if entity == 'insult':
+                            send_message(sender_id,
+                                         "Sorry, please do not hurl any vulgarities at me. I am too cute to be abused!")
+                        elif entity == 'greeting':
+                            send_message(sender_id, "Hi! Whatzzup! I am your friendly property noob!")
+                        elif entity == 'property':
+                            send_message(sender_id, "So you are looking for " + value)
+                            send_message(sender_id,
+                                         "Give me a moment. I will find out the prices of " + value + "in Singapore")
+                        elif entity == 'location':
+                            send_message(sender_id, "So you are looking for apartments in" + value)
+                            send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
+                        elif entity == None:
+                            send_message(sender_id, "I don't understand you.")
 
-                    # send_message(sender_id, "resp is: " + str(resp))
 
-                if messaging_event.get("delivery"):  # delivery confirmation
-                    pass
+                        # send_message(sender_id, "resp is: " + str(resp))
 
-                if messaging_event.get("optin"):  # optin confirmation
-                    pass
+                    if messaging_event.get("delivery"):  # delivery confirmation
+                        pass
 
-                if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    pass
+                    if messaging_event.get("optin"):  # optin confirmation
+                        pass
 
+                    if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
+                        pass
+    except:
+        send_message("383819208755566", "sorry no reply!")
     return "ok", 200
 
 
