@@ -65,8 +65,11 @@ def webhook():
                         elif entity == 'location':
                             send_message(sender_id, "So you are looking for apartments in " + value)
                             send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
+                        elif entity == 'joke':
+                            send_message(sender_id, "Your joke very funny. I like")
                         elif entity == None:
                             send_message(sender_id, "I don't understand you.")
+
                         else:
                             send_message(sender_id, "Sorry, I don't understand you!")
 
