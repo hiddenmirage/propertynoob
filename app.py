@@ -51,8 +51,8 @@ def webhook():
 
                     resp = client.message(message_text)
 
-                    send_message(sender_id, "hahahah")
-                    # send_message(sender_id, "resp is: " + str(resp))
+                    # send_message(sender_id, "hahahah")
+                    send_message(sender_id, "resp is: " + str(resp))
 
 
 
