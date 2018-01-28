@@ -66,7 +66,7 @@ def webhook():
                     elif entity == 'location':
                         send_message(sender_id, "So you are looking for apartments in " + value)
                         send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
-                    elif entity == None:
+                    elif entity == False:
                         send_message(sender_id, "I don't understand you. Please tell me more.")
 
                     # send_message(sender_id, "resp is: " + str(resp))
@@ -91,7 +91,7 @@ def wit_response(message_text):
         entity = list(resp['entities'])[0]
         value = resp['entities'][entity][0]['value']
     except:
-        pass
+        return False
     return (entity, value)
 
 
