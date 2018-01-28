@@ -46,7 +46,7 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"][
                         "id"]  # the recipient's ID, which should be your page's facebook ID
-                    message_text = messaging_event["message"]["text"]  # the message's text
+                    message_text = messaging_event["message"]["object"]  # the message's text
                     # **********************************DONT REMOVE**********************************************************************************
 
                     response = wit_response(message_text)
@@ -62,12 +62,13 @@ def webhook():
                     elif entity == 'property':
                         send_message(sender_id, "So you are looking for " + value)
                         send_message(sender_id,
-                                     "Give me a moment. I will find out the prices of " + value + " in Singapore")
+                                     "Give me a moment. I will find out the prices of " + value + "in Singapore")
                     elif entity == 'location':
-                        send_message(sender_id, "So you are looking for apartments in " + value)
+                        send_message(sender_id, "So you are looking for apartments in" + value)
                         send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
-                    else:
-                        send_message(sender_id, "I don't understand you. Please tell me more.")
+                    elif entity == None:
+                        send_message(sender_id, "I don't understand you.")
+
                     # send_message(sender_id, "resp is: " + str(resp))
 
                 if messaging_event.get("delivery"):  # delivery confirmation
@@ -87,12 +88,10 @@ def wit_response(message_text):
     entity = None
     value = None
     try:
-        if resp['object']=="page":
-            return False
         entity = list(resp['entities'])[0]
         value = resp['entities'][entity][0]['value']
     except:
-        return False
+        pass
     return (entity, value)
 
 
