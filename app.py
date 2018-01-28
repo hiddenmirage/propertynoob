@@ -11,9 +11,7 @@ app = Flask(__name__)
 THRESHOLD = 0.9
 
 
-#***********WIT AI TOKEN TO USE APP**************
-access_token = "77L3MJRKODLLSTFYUCTSWRLAT66ZKQHJ"
-client = Wit(access_token = access_token)
+
 
 
 @app.route('/', methods=['GET'])
@@ -31,6 +29,9 @@ def verify():
 @app.route('/', methods=['POST'])
 def webhook():
     # endpoint for processing incoming messaging events
+    # ***********WIT AI TOKEN TO USE APP**************
+    access_token = "77L3MJRKODLLSTFYUCTSWRLAT66ZKQHJ"
+    client = Wit(access_token=access_token)
 
     data = request.get_json()
     log(data)  # you may not want to log every incoming message in production, but it's good for testing
