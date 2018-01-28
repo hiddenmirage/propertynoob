@@ -6,6 +6,7 @@ from datetime import datetime
 import requests
 from flask import Flask, request
 from wit import Wit
+
 app = Flask(__name__)
 
 THRESHOLD = 0.9
@@ -31,34 +32,44 @@ def webhook():
     # endpoint for processing incoming messaging events
     # ***********WIT AI TOKEN TO USE APP**************
 
-
     data = request.get_json()
     log(data)  # you may not want to log every incoming message in production, but it's good for testing
-
-
 
     if data["object"] == "page":
 
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
 
-# **********************************DONT REMOVE**********************************************************************************
+                # **********************************DONT REMOVE**********************************************************************************
                 if messaging_event.get("message"):  # someone sent us a message
 
                     sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"][
                         "id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-#**********************************DONT REMOVE**********************************************************************************
+                    # **********************************DONT REMOVE**********************************************************************************
 
                     response = wit_response(message_text)
-                    if response == False:
-                        send_message(sender_id, ERROR_MESSAGE)
-                    else:
-                        send_message(sender_id, "Your mapped entity is: " + response[0])
+
+                    entity = response[0]
+                    value = response[1]
+
+                    if entity == 'insult':
+                        send_message(sender_id,
+                                     "Sorry, please do not hurl any vulgarities at me. I am too cute to be abused!")
+                    elif entity == 'greeting':
+                        send_message(sender_id, "Hi! Whatzzup! I am your friendly property noob!")
+                    elif entity == 'property':
+                        send_message(sender_id, "So you are looking for " + value)
+                        send_message(sender_id,
+                                     "Give me a moment. I will find out the prices of " + value + "in Singapore")
+                    elif entity == 'location':
+                        send_message(sender_id, "So you are looking for apartments in" + value)
+                        send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
+                    elif entity == None:
+                        send_message(sender_id, "I don't understand you. Please tell me more")
+
                     # send_message(sender_id, "resp is: " + str(resp))
-
-
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -80,7 +91,7 @@ def wit_response(message_text):
         entity = list(resp['entities'])[0]
         value = resp['entities'][entity][0]['value']
     except:
-        return False
+        pass
     return (entity, value)
 
 
@@ -97,6 +108,7 @@ def check_property_price(entities):
     result = result + " at " + location + " cost $99999999"
 
     return result
+
 
 def send_message(recipient_id, message_text):
     log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
