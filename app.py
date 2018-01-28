@@ -9,7 +9,8 @@ from wit import Wit
 app = Flask(__name__)
 
 THRESHOLD = 0.9
-
+access_token = "77L3MJRKODLLSTFYUCTSWRLAT66ZKQHJ"
+client = Wit(access_token=access_token)
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -32,8 +33,7 @@ def webhook():
     data = request.get_json()
     log(data)  # you may not want to log every incoming message in production, but it's good for testing
 
-    access_token = "77L3MJRKODLLSTFYUCTSWRLAT66ZKQHJ"
-    client = Wit(access_token=access_token)
+
 
     if data["object"] == "page":
 
@@ -49,9 +49,9 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
 #**********************************DONT REMOVE**********************************************************************************
 
-                    resp = client.message(message_text)
+                    response = wit_response(message_text)
 
-                    send_message(sender_id, "you replied: " + message_text + resp)
+                    send_message(sender_id, "My response is: " + response[0])
                     # send_message(sender_id, "resp is: " + str(resp))
 
 
@@ -66,6 +66,19 @@ def webhook():
                     pass
 
     return "ok", 200
+
+
+def wit_response(message_text):
+    resp = client.message(message_text)
+    entity = None
+    value = None
+    try:
+        entity = list(resp['entities'])[0]
+        value = resp['entities'][entity][0]['value']
+    except:
+        pass
+    return (entity, value)
+
 
 def check_property_price(entities):
     property_type = entities["property_type"][0]["value"] if "property_type" in entities else None
