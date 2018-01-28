@@ -66,9 +66,8 @@ def webhook():
                     elif entity == 'location':
                         send_message(sender_id, "So you are looking for apartments in " + value)
                         send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
-                    elif entity == False:
+                    else:
                         send_message(sender_id, "I don't understand you. Please tell me more.")
-
                     # send_message(sender_id, "resp is: " + str(resp))
 
                 if messaging_event.get("delivery"):  # delivery confirmation
