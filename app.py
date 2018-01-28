@@ -11,6 +11,8 @@ app = Flask(__name__)
 THRESHOLD = 0.9
 access_token = "77L3MJRKODLLSTFYUCTSWRLAT66ZKQHJ"
 client = Wit(access_token=access_token)
+ERROR_MESSAGE = "Sorry, I didn't get what you mean. Could you repeat again?"
+
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -50,8 +52,10 @@ def webhook():
 #**********************************DONT REMOVE**********************************************************************************
 
                     response = wit_response(message_text)
-
-                    send_message(sender_id, "My response is: " + response[0])
+                    if response == False:
+                        send_message(sender_id, ERROR_MESSAGE)
+                    else:
+                        send_message(sender_id, "Your mapped entity is: " + response[0])
                     # send_message(sender_id, "resp is: " + str(resp))
 
 
@@ -76,7 +80,7 @@ def wit_response(message_text):
         entity = list(resp['entities'])[0]
         value = resp['entities'][entity][0]['value']
     except:
-        pass
+        return False
     return (entity, value)
 
 
