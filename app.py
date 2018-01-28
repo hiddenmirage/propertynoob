@@ -49,9 +49,9 @@ def webhook():
                     message_text = messaging_event["message"]["text"]  # the message's text
 #**********************************DONT REMOVE**********************************************************************************
 
-                    # resp = client.message(message_text)
+                    resp = client.message(message_text)
 
-                    send_message(sender_id, "you replied: " + message_text)
+                    send_message(sender_id, "you replied: " + message_text + str(resp))
                     # send_message(sender_id, "resp is: " + str(resp))
 
 
