@@ -5,10 +5,16 @@ from datetime import datetime
 
 import requests
 from flask import Flask, request
-
+from wit import Wit
 app = Flask(__name__)
 
 THRESHOLD = 0.9
+
+
+#***********WIT AI TOKEN TO USE APP**************
+access_token = "77L3MJRKODLLSTFYUCTSWRLAT66ZKQHJ"
+client = Wit(access_token = access_token)
+
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -34,41 +40,22 @@ def webhook():
         for entry in data["entry"]:
             for messaging_event in entry["messaging"]:
 
+# **********************************DONT REMOVE**********************************************************************************
                 if messaging_event.get("message"):  # someone sent us a message
 
                     sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"][
                         "id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
+#**********************************DONT REMOVE**********************************************************************************
 
-                    if "attachments" in messaging_event["message"]:  # received attachments
-                        send_message(sender_id, "Can't read attachments yet. pai seh ah.")
-
-                    if "quick_reply" in messaging_event["message"]:
-                        if messaging_event["message"]["quick_reply"]["payload"] == "start_property_valuation":
-                            send_message(sender_id, "Ok. Tell me where", [location_button])
-
-                        elif messaging_event["message"]["quick_reply"]["payload"] == "tell_joke":
-                            send_message(sender_id, "Bob is Alice's best friend. hahaha..")
-
-                    elif "nlp" in messaging_event["message"]:
-                        entities = messaging_event["message"]["nlp"]["entities"]
-
-                        if "property_type" in entities and entities["property_type"][0][
-                            "confidence"] >= THRESHOLD and \
-                                "location" in entities and entities["location"][0]["confidence"] >= THRESHOLD:
-                            result = check_property_price(entities)
-                            send_message(sender_id, result)
-
-                        if "insult" in entities and entities["insult"][0]["confidence"] >= THRESHOLD:
-                            send_message(sender_id, "Don't be so rude can?")
-
-                        if "greetings" in entities and entities["greetings"][0]["confidence"] >= THRESHOLD:
-                            send_message(sender_id, "Hello.. What do you want to do?")
+                    resp = client.message(message_text)
 
 
-                    # send_message(sender_id, "message text is: " + message_text)
-                    send_message(sender_id, "roger that!")
+                    send_message(sender_id, "resp is: " + resp)
+
+
+
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
 
