@@ -133,7 +133,7 @@ def send_message(recipient_id, message_text):
         log(r.status_code)
         log(r.text)
 
-
+#except UnicodeEncodeError:
 def log(msg, *args, **kwargs):  # simple wrapper for logging to stdout on heroku
     try:
         if type(msg) is dict:
@@ -141,8 +141,8 @@ def log(msg, *args, **kwargs):  # simple wrapper for logging to stdout on heroku
         else:
             msg = unicode(msg).format(*args, **kwargs)
         print u"{}: {}".format(datetime.now(), msg)
-    except UnicodeEncodeError:
-        pass  # squash logging errors in case of non-ascii text
+    except:
+        pass# squash logging errors in case of non-ascii text
     sys.stdout.flush()
 
 
