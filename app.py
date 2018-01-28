@@ -67,6 +67,8 @@ def webhook():
                             send_message(sender_id, "Give me a moment. I will find out all the prices in " + value)
                         elif entity == None:
                             send_message(sender_id, "I don't understand you.")
+                        else:
+                            send_message(sender_id, "Sorry, I don't understand you!")
 
 
                         # send_message(sender_id, "resp is: " + str(resp))
