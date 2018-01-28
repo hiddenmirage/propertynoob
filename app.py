@@ -52,7 +52,7 @@ def webhook():
                     resp = client.message(message_text)
 
 
-                    send_message(sender_id, "resp is: " + resp)
+                    send_message(sender_id, "resp is: " + str(resp))
 
 
 
