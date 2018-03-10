@@ -55,7 +55,7 @@ def webhook():
 
                         if entity == 'insult':
                             send_message(sender_id,
-                                         "Sorry, please do not hurl any vulgarities at me. hahhahahha!")
+                                         "Sorry, please do not hurl any vulgarities at me. testing 1 2 3!")
                         elif entity == 'greeting':
                             send_message(sender_id, "Hi! Whatzzup! I am your friendly property noob!")
                         elif entity == 'property':
