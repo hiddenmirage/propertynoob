@@ -24,7 +24,7 @@ def verify():
             return "Verification token mismatch", 403
         return request.args["hub.challenge"], 200
 
-    return "Hello world, beachesss", 200
+    return "Hello world, hitchesssss hehehe", 200
 
 
 @app.route('/', methods=['POST'])
@@ -55,7 +55,7 @@ def webhook():
 
                         if entity == 'insult':
                             send_message(sender_id,
-                                         "Sorry, please do not hurl any vulgarities at me. I am too cute to be abused!")
+                                         "Sorry, please do not hurl any vulgarities at me. hahhahahha!")
                         elif entity == 'greeting':
                             send_message(sender_id, "Hi! Whatzzup! I am your friendly property noob!")
                         elif entity == 'property':
